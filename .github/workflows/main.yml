@@ -1,0 +1,21 @@
+---
+  name: Deploy Application
+  
+  on:
+    push:
+      branches:
+        - 'release-*'
+        - 'add/all-code'
+
+  jobs:
+    production-eks-deployment:
+      permissions:
+        contents: 'read'
+
+      runs-on: 
+        group: Default
+        labels: deploy-server-1
+
+      steps:
+        - name: Vefify K8s Cluster
+          run: kubectl cluster-info
