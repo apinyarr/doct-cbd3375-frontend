@@ -1,0 +1,8 @@
+---
+namespace: cyberbullying-namespace
+
+frontend:
+  image: apinyarr/doct-cbd3375-frontend
+  tag: v1.0
+  service:
+    type: LoadBalancer
