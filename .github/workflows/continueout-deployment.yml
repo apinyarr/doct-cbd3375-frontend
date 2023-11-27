@@ -38,4 +38,4 @@
           run: |
             SELENIUM_URL=$(cat selenium_url)
             echo "Selenium URL: "$SELENIUM_URL
-            curl "$SELENUIM_URL/startwebdriver?release=${{ github.run_id }}-${{ github.run_number }}"
+            curl "$SELENIUM_URL/startwebdriver?release=${{ github.run_id }}-${{ github.run_number }}"
