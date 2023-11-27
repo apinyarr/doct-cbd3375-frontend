@@ -32,3 +32,7 @@
             echo "Click the URL below to test"
             sleep 1m
             KUBECONFIG=~/.kube/eks_3375_config kubectl describe ingress frontend-ingress-resource | grep Address | awk '{url="http://"$2":8080"; print url}'
+
+        - name: Selenium Web Driver Test the Frontend
+          run: |
+            curl https://6ewlhm2tmh.execute-api.ca-central-1.amazonaws.com/startwebdriver?release=${{ github.run_id }}-${{ github.run_number }}
