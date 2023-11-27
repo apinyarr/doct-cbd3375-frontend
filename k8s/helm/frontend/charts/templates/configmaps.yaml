@@ -4,4 +4,4 @@ metadata:
   name: ml-config
   namespace: {{ .Values.namespace }}
 data:
-  backend_url: https://5miqdqexwk.execute-api.ca-central-1.amazonaws.com/cyberbullyingpredict
+  backend_url: {{ .Values.frontend.backend }}
