@@ -32,10 +32,11 @@
             KUBECONFIG=~/.kube/eks_3375_config helm upgrade -f ./k8s/helm/frontend/charts/values.yaml --set frontend.backend=$BACKEND_URL --install frontend-prd ./k8s/helm/frontend/charts/            
             echo "Click the URL below to test"
             sleep 8m
-            KUBECONFIG=~/.kube/eks_3375_config kubectl describe ingress frontend-ingress-resource | grep Address | awk '{url="http://"$2":8080"; print url}'
+            FRONTEND_URL=$(KUBECONFIG=~/.kube/eks_3375_config kubectl describe ingress frontend-ingress-resource | grep Address | awk '{url="http://"$2":8080"; print url}')
+            echo $FRONTEND_URL
 
         - name: Selenium Web Driver Test the Frontend
           run: |
             SELENIUM_URL=$(cat selenium_url)
             echo "Selenium URL: "$SELENIUM_URL
-            curl "$SELENIUM_URL/startwebdriver?release=${{ github.run_id }}-${{ github.run_number }}"
+            curl "$SELENIUM_URL/startwebdriver?release=${{ github.run_id }}-${{ github.run_number }}&url=$FRONTEND_URL"
