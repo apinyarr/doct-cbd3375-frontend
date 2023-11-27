@@ -4,7 +4,7 @@
   on:
     push:
       branches:
-        - 'add/workflow'
+        - 'add/*'
       tags:
         - 'release-*'
 
