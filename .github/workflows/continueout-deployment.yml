@@ -1,0 +1,34 @@
+---
+  name: Deploy Application
+  
+  on:
+    push:
+      branches:
+        - 'add/workflow'
+      tags:
+        - 'release-*'
+
+  jobs:
+    production-eks-deployment:
+      name: Deploy Frontend in EKS cluster
+      runs-on: k8s-3375-deployer
+
+      steps:
+        - name: Checkout Source Code
+          uses: actions/checkout@v4
+
+        - name: Verify K8s Cluster Information
+          run: |
+            KUBECONFIG=~/.kube/eks_3375_config kubectl config get-clusters
+            KUBECONFIG=~/.kube/eks_3375_config kubectl cluster-info
+        
+        - name: Deploy Frontend Application in EKS
+          run: |
+            BACKEND_URL=$(cat backend)
+            echo "Backend URL: "$BACKEND_URL
+            KUBECONFIG=~/.kube/eks_3375_config kubectl config set-context --current --namespace=cyberbullying-namespace
+            KUBECONFIG=~/.kube/eks_3375_config helm delete frontend-prd || echo "No existing release"
+            KUBECONFIG=~/.kube/eks_3375_config helm upgrade -f ./k8s/helm/frontend/charts/values.yaml --set frontend.backend=$BACKEND_URL --install frontend-prd ./k8s/helm/frontend/charts/            
+            echo "Click the URL below to test"
+            sleep 1m
+            KUBECONFIG=~/.kube/eks_3375_config kubectl describe ingress frontend-ingress-resource | grep Address | awk '{url="http://"$2":8080"; print url}'
