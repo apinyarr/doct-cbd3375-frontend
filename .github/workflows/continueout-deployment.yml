@@ -28,7 +28,18 @@
             echo "Backend URL: "$BACKEND_URL
             KUBECONFIG=~/.kube/eks_3375_config kubectl config set-context --current --namespace=cyberbullying-namespace
             KUBECONFIG=~/.kube/eks_3375_config helm delete frontend-prd || echo "No existing release"
+            sleep 1m
             KUBECONFIG=~/.kube/eks_3375_config helm upgrade -f ./k8s/helm/frontend/charts/values.yaml --set frontend.backend=$BACKEND_URL --install frontend-prd ./k8s/helm/frontend/charts/            
             echo "Click the URL below to test"
-            sleep 1m
-            KUBECONFIG=~/.kube/eks_3375_config kubectl describe ingress frontend-ingress-resource | grep Address | awk '{url="http://"$2":8080"; print url}'
+            sleep 8m
+            FRONTEND_URL=$(KUBECONFIG=~/.kube/eks_3375_config kubectl describe ingress frontend-ingress-resource | grep Address | awk '{url="http://"$2":8080"; print url}')
+            echo $FRONTEND_URL | tee frontend
+
+        - name: Selenium Web Driver Test the Frontend
+          run: |
+            SELENIUM_URL=$(cat selenium_url)
+            echo "Selenium URL: "$SELENIUM_URL
+            FRONTEND_URL=$(cat frontend)
+            echo "Frontend URL: $FRONTEND_URL"
+            echo "curl URL: $SELENIUM_URL/startwebdriver?release=${{ github.run_id }}-${{ github.run_number }}&url=$FRONTEND_URL"
+            curl "$SELENIUM_URL/startwebdriver?release=${{ github.run_id }}-${{ github.run_number }}&url=$FRONTEND_URL"
