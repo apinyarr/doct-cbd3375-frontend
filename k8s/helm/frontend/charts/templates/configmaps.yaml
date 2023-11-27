@@ -5,3 +5,4 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   backend_url: {{ .Values.frontend.backend }}
+  statsd_host: {{ .Values.frontend.statsd_host }}

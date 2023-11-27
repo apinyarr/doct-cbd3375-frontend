@@ -24,6 +24,11 @@ spec:
             configMapKeyRef:
               name: ml-config
               key: backend_url
+        - name: STATSD_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: ml-config
+              key: statsd_host
         ports:
         - containerPort: 8080
           protocol: TCP

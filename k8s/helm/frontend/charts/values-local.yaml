@@ -3,7 +3,8 @@ namespace: cyberbullying-namespace
 
 frontend:
   image: apinyarr/doct-cbd3375-frontend
-  tag: v1.0
+  tag: v2.0
   service:
     type: NodePort
   backend: https://tn7ysl0ig5.execute-api.ca-central-1.amazonaws.com/cyberbullyingpredict
+  statsd_host: "99.79.69.20"

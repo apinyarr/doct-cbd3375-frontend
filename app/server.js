@@ -1,6 +1,7 @@
 const express = require('express');
 const request = require('request');
 const bodyParser = require('body-parser');
+var statsd = require('./statsd');
 
 const app = express();
 const port = 8080;
@@ -80,7 +81,10 @@ app.get('/sendRequest', (req, res) => {
 
   const json = JSON.parse(`{ "text": "${word}" }`);
 
+  statsd.increment('request.count');
+
   // Make a request to the backend API (replace with your backend URL)
+  const startTime = new Date()
   request.get({
       url: `${backend_url}`,
       json: true,
@@ -92,6 +96,9 @@ app.get('/sendRequest', (req, res) => {
       res.send(data);
     }
   });
+  const endTime = new Date()
+  const duration = endTime - startTime; // Calculate the duration in milliseconds
+  statsd.timing('response_time.backend_request', duration)
 });
 
 app.listen(port, () => {
