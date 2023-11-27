@@ -25,6 +25,7 @@
         - name: Deploy Frontend Application in EKS
           run: |
             BACKEND_URL=$(cat backend)
+            echo "Backend URL: "$BACKEND_URL
             KUBECONFIG=~/.kube/eks_3375_config helm upgrade -f ./k8s/helm/frontend/charts/values.yaml --set backend=$BACKEND_URL --install frontend-prd ./k8s/helm/frontend/charts/
             KUBECONFIG=~/.kube/eks_3375_config kubectl config set-context --current --namespace=cyberbullying-namespace
             echo "Click the URL below to test"
